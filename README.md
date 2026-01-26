@@ -106,7 +106,9 @@ php artisan migrate
 
 ```bash
 composer require laravel/pennant
+
 php artisan vendor:publish --tag=pennant-migrations
+
 php artisan migrate
 ```
 
