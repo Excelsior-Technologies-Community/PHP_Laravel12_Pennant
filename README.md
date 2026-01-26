@@ -65,7 +65,6 @@ database/
 
 ```bash
 composer create-project laravel/laravel pennant-demo
-cd pennant-demo
 ```
 
 ### Configure Database in `.env`
