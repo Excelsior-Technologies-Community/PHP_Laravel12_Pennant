@@ -1,59 +1,350 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+#  PHP_Laravel12_Pennant
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://img.shields.io/badge/Laravel-12-red" />
+  <img src="https://img.shields.io/badge/PHP-8.2-blue" />
+  <img src="https://img.shields.io/badge/Feature%20Flags-Laravel%20Pennant-green" />
+  <img src="https://img.shields.io/badge/Auth-Laravel%20Breeze-orange" />
 </p>
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+##  Overview
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This project demonstrates how to implement a **Feature Toggle System** using **Laravel 12** and **Laravel Pennant**.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Feature flags allow you to enable or disable features in your application **without redeploying code**.
 
-## Learning Laravel
+### In this project:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+*  Admin users can enable/disable a **New Dashboard UI**
+*  Normal users always see the **Old Dashboard UI**
+*  The system is powered by **Laravel Pennant**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+##  Features
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+* Laravel 12 Application Setup
+* Authentication with Laravel Breeze
+* Feature Flags using Laravel Pennant
+* Admin-based feature control
+* Real-time UI switching (no redeploy required)
+* Database-driven feature overrides
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+##  Project Folder Structure
 
-## Contributing
+```
+app/
+ ├── Features/
+ │    └── NewDashboard.php
+ │
+ ├── Http/
+ │    └── Controllers/
+ │         └── DashboardController.php
+ │
+resources/
+ └── views/
+      └── dashboard.blade.php
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+routes/
+ └── web.php
 
-## Code of Conduct
+database/
+ └── migrations/
+      └── add_is_admin_to_users_table.php
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+#  Installation Guide
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+##  Install Laravel Project
 
-## License
+```bash
+composer create-project laravel/laravel pennant-demo
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Configure Database in `.env`
+
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Run:
+
+```bash
+php artisan migrate
+```
+
+---
+
+##  Install Authentication (Laravel Breeze)
+
+```bash
+composer require laravel/breeze --dev
+
+php artisan breeze:install
+
+npm install
+
+npm run dev
+
+php artisan migrate
+```
+
+---
+
+##  Install Laravel Pennant
+
+```bash
+composer require laravel/pennant
+
+php artisan vendor:publish --tag=pennant-migrations
+
+php artisan migrate
+```
+
+This creates the **features** table.
+
+---
+
+##  Add Admin Column to Users Table
+
+```bash
+php artisan make:migration add_is_admin_to_users_table
+```
+
+**database/migrations/add_is_admin_to_users_table.php**
+
+```php
+Schema::table('users', function (Blueprint $table) {
+    $table->boolean('is_admin')->default(false);
+});
+```
+
+Run migration:
+
+```bash
+php artisan migrate
+```
+
+Make a user admin:
+
+```bash
+php artisan tinker
+```
+
+```php
+$user = App\Models\User::first();
+$user->is_admin = 1;
+$user->save();
+```
+
+---
+
+##  Create Feature Class
+
+```bash
+php artisan pennant:feature NewDashboard
+```
+
+**app/Features/NewDashboard.php**
+
+```php
+<?php
+
+namespace App\Features;
+
+class NewDashboard
+{
+    public function resolve(mixed $scope): mixed
+    {
+        // Default logic: Only admins see new dashboard
+        return $scope?->is_admin === 1;
+    }
+}
+
+```
+
+---
+
+##  Dashboard Controller
+
+```bash
+php artisan make:controller DashboardController
+```
+
+**app/Http/Controllers/DashboardController.php**
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Laravel\Pennant\Feature;
+use App\Features\NewDashboard;
+
+class DashboardController extends Controller
+{
+    public function enableFeature(Request $request)
+    {
+        Feature::for($request->user())->activate(NewDashboard::class);
+        return back()->with('success', 'New Dashboard Enabled!');
+    }
+
+    public function disableFeature(Request $request)
+    {
+        Feature::for($request->user())->deactivate(NewDashboard::class);
+        return back()->with('success', 'New Dashboard Disabled!');
+    }
+}
+
+```
+
+---
+
+##  Routes
+
+**routes/web.php**
+
+```php
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::view('/dashboard', 'dashboard')->name('dashboard');
+
+    Route::post('/feature/on', [DashboardController::class, 'enableFeature'])->name('feature.on');
+    Route::post('/feature/off', [DashboardController::class, 'disableFeature'])->name('feature.off');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', function () {
+        return view('profile.edit');
+    })->name('profile.edit');
+});
+require __DIR__.'/auth.php';
+
+```
+
+---
+
+##  Dashboard View
+
+**resources/views/dashboard.blade.php**
+
+```blade
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+
+                    @if(session('success'))
+                        <div class="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <h3 class="text-lg font-bold mb-4">Laravel Pennant Feature Toggle</h3>
+
+                    <form method="POST" action="{{ route('feature.on') }}" class="inline">
+                        @csrf
+                        <button class="bg-green-600 text-white px-4 py-2 rounded">
+                            Enable New Dashboard
+                        </button>
+                    </form>
+
+                    <form method="POST" action="{{ route('feature.off') }}" class="inline ml-2">
+                        @csrf
+                        <button class="bg-red-600 text-white px-4 py-2 rounded">
+                            Disable New Dashboard
+                        </button>
+                    </form>
+
+                    <hr class="my-6">
+
+                    @feature(App\Features\NewDashboard::class)
+                        <div class="p-4 bg-green-100 border border-green-400 rounded">
+                            🆕 <strong>NEW DASHBOARD UI ENABLED</strong>
+                            <p>This section is controlled using Laravel Pennant.</p>
+                        </div>
+                    @endfeature
+
+                    @unlessfeature(App\Features\NewDashboard::class)
+                        <div class="p-4 bg-red-100 border border-red-400 rounded">
+                            📊 <strong>OLD DASHBOARD UI</strong>
+                            <p>The feature is currently disabled.</p>
+                        </div>
+                    @endfeature
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
+
+```
+
+---
+
+##  Clear Old Feature Cache
+
+```bash
+php artisan pennant:clear
+php artisan optimize:clear
+```
+
+---
+
+##  Run the Project
+
+```bash
+php artisan serve
+```
+
+Open in browser:
+
+```
+http://127.0.0.1:8000/dashboard
+```
+
+---
+
+##  Output
+
+ Enable Dashboard:-
+
+ <img width="1294" height="581" alt="Screenshot 2026-01-26 120332" src="https://github.com/user-attachments/assets/ae7414db-6e27-409d-a474-0949e0f631b9" />
+
+ Disable Dashboard:-
+
+ <img width="1325" height="563" alt="Screenshot 2026-01-26 120344" src="https://github.com/user-attachments/assets/4586dc00-0e0d-41fe-9b1a-fa6426b37205" />
+
+
+---
+
+
+
