@@ -9,8 +9,6 @@ class NewReports
      */
     public function resolve(mixed $scope): mixed
     {
-        // Disabled by default.
-        // Admins can enable it for specific users using Pennant.
         return false;
     }
 }
