@@ -10,13 +10,23 @@ class DashboardController extends Controller
 {
     public function enableFeature(Request $request)
     {
-        Feature::for($request->user())->activate(NewDashboard::class);
-        return back()->with('success', 'New Dashboard Enabled!');
+        Feature::for($request->user())
+            ->activate(NewDashboard::class);
+
+        return back()->with(
+            'success',
+            'New Dashboard Enabled!'
+        );
     }
 
     public function disableFeature(Request $request)
     {
-        Feature::for($request->user())->deactivate(NewDashboard::class);
-        return back()->with('success', 'New Dashboard Disabled!');
+        Feature::for($request->user())
+            ->deactivate(NewDashboard::class);
+
+        return back()->with(
+            'success',
+            'New Dashboard Disabled!'
+        );
     }
 }
