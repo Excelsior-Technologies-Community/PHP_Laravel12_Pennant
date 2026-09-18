@@ -27,7 +27,7 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | Existing New Dashboard Feature
+    | Existing Dashboard Feature Toggles
     |--------------------------------------------------------------------------
     */
 
@@ -49,7 +49,21 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | Feature Management
+    | A/B Testing Conversion Tracker
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post(
+        '/features/track-conversion',
+        [
+            FeatureController::class,
+            'trackConversion',
+        ]
+    )->name('features.track-conversion');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Feature Management Suite
     |--------------------------------------------------------------------------
     */
 
@@ -79,7 +93,51 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | New Bulk Features
+    | Percentage Rollout & Traffic Slider
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post(
+        '/features/set-percentage',
+        [
+            FeatureController::class,
+            'setPercentage',
+        ]
+    )->name('features.set-percentage');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Emergency Kill-Switch & Maintenance Mode
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post(
+        '/features/kill-switch',
+        [
+            FeatureController::class,
+            'killSwitch',
+        ]
+    )->name('features.kill-switch');
+
+    Route::post(
+        '/features/panic-kill-all',
+        [
+            FeatureController::class,
+            'panicKillAll',
+        ]
+    )->name('features.panic-kill-all');
+
+    Route::post(
+        '/features/toggle-maintenance',
+        [
+            FeatureController::class,
+            'toggleMaintenance',
+        ]
+    )->name('features.toggle-maintenance');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Bulk & Reset
     |--------------------------------------------------------------------------
     */
 
@@ -99,12 +157,6 @@ Route::middleware([
         ]
     )->name('features.bulk-disable');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Reset User Override
-    |--------------------------------------------------------------------------
-    */
-
     Route::post(
         '/features/reset-override',
         [
@@ -115,7 +167,7 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | CSV Export
+    | CSV Export & Audit History
     |--------------------------------------------------------------------------
     */
 
@@ -127,12 +179,6 @@ Route::middleware([
         ]
     )->name('features.export');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Audit History
-    |--------------------------------------------------------------------------
-    */
-
     Route::get(
         '/features/audit',
         [
@@ -142,14 +188,12 @@ Route::middleware([
     )->name('features.audit');
 });
 
-Route::middleware('auth')->group(function () {
+use App\Http\Controllers\ProfileController;
 
-    Route::get(
-        '/profile',
-        function () {
-            return view('profile.edit');
-        }
-    )->name('profile.edit');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';
